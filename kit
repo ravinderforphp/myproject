@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GRM Toolkit — Single-file Skeleton</title>
+<style>
+  :root{
+    --bg: #f8fafc;
+    --card: #fff;
+    --muted: #6b7280;
+    --accent: #d9463e; /* toolbox red */
+    --stroke: #1f2937;
+    --radius: 10px;
+    --gap: 24px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:var(--stroke)}
+  .container{
+    display:grid;
+    grid-template-columns: 1fr 420px 1fr;
+    grid-template-rows: 1fr 260px;
+    gap: var(--gap);
+    height: 100vh;
+    padding: 28px;
+    position:relative;
+    align-items:start;
+  }
+
+  .card-column{display:flex;align-items:center;justify-content:center;padding:8px}
+  .left{grid-column:1/2;grid-row:1/2;align-items:flex-start}
+  .center{grid-column:2/3;grid-row:1/3;display:flex;align-items:center;justify-content:center;position:relative}
+  .right{grid-column:3/4;grid-row:1/2;align-items:flex-start}
+  .bottom{grid-column:2/3;grid-row:2/3;align-items:center;justify-content:center}
+  .bottom-left{grid-column:1/2;grid-row:2/3;align-items:center;justify-content:center}
+
+  .card{
+    width: 320px;
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 22px rgba(15,23,42,0.06);
+    padding: 18px;
+    border: 1px solid rgba(15,23,42,0.04);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+  .card h3{margin:0 0 8px 0;font-size:1.05rem}
+  .card-body p{color:var(--muted);margin:8px 0 0 0;font-size:0.95rem;line-height:1.35}
+  .logo-row{display:flex;gap:8px;align-items:center}
+  .logo{height:36px;width:36px;flex:0 0 36px;background:#eef2ff;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:18px;color:#334155}
+
+  /* toolbox center */
+  .toolbox{
+    width: 240px;
+    height: 240px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    z-index:3;
+  }
+  .toolbox-icon{
+    width:150px;height:130px;background:var(--accent);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;
+    box-shadow:0 14px 36px rgba(0,0,0,0.14);
+    cursor:pointer;border:6px solid rgba(255,255,255,0.06);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+  .toolbox-icon:active{transform:scale(.98)}
+  .toolbox-icon .gear{font-size:36px;margin-bottom:6px}
+  .toolbox-icon .label{font-weight:700;letter-spacing:0.2px}
+  .toolbox-sub{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--muted)}
+
+  /* svg overlay behind icons */
+  .svg-wrap{
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+  }
+  svg#connectors{width:100%;height:100%}
+
+  /* small highlights */
+  .card.highlight{transform:translateY(-6px);box-shadow:0 18px 40px rgba(15,23,42,0.12)}
+  .card.hovered{transform:translateY(-4px)}
+
+  /* responsive */
+  @media (max-width: 980px){
+    .container{grid-template-columns:1fr;grid-template-rows:auto auto auto auto; height:auto;padding:12px}
+    .left,.right,.bottom-left,.bottom{justify-content:center}
+    .center{grid-row:2/3;padding:12px}
+    .card{width:94%}
+    .toolbox{margin:18px 0}
+  }
+
+  /* small utility for inline icons in cards */
+  .inline-icon{display:inline-flex;align-items:center;gap:10px}
+</style>
+</head>
+<body>
+  <main class="container" role="main" aria-label="GRM Toolkit diagram">
+    <!-- Left column (AI Tools) -->
+    <section class="card-column left" aria-label="AI Tools column">
+      <article class="card" id="ai-tools" tabindex="0">
+        <h3>AI Tools</h3>
+        <div class="card-body">
+          <div style="display:flex;gap:10px;align-items:center">
+            <div class="logo" title="Python">Py</div>
+            <div class="logo" title="GitHub">GH</div>
+            <div class="logo" title="Copilot">CP</div>
+          </div>
+          <p>Integrates into Office products to create, analyze and automate. Flexible language for data automation and AI projects.</p>
+        </div>
+      </article>
+    </section>
+
+    <!-- Center with SVG connectors + toolbox -->
+    <section class="center" aria-hidden="false">
+      <div class="svg-wrap" aria-hidden="true">
+        <svg id="connectors" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#1f2937"/>
+            </marker>
+          </defs>
+          <path id="p-left" d="" stroke="#1f2937" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+          <path id="p-right" d="" stroke="#1f2937" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+          <path id="p-bottom" d="" stroke="#1f2937" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+          <path id="p-top" d="" stroke="#1f2937" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrow)"/>
+        </svg>
+      </div>
+
+      <div class="toolbox" id="toolbox">
+        <div class="toolbox-icon" role="button" tabindex="0" aria-pressed="false" aria-label="GRM Toolkit">
+          <div class="gear" aria-hidden="true">⚙️</div>
+          <div class="label">GRM Toolkit</div>
+        </div>
+        <div class="toolbox-sub">Central toolkit</div>
+      </div>
+    </section>
+
+    <!-- Right column (Productivity & Collaboration) -->
+    <section class="card-column right" aria-label="Productivity and Collaboration column">
+      <article class="card" id="prod-collab" tabindex="0">
+        <h3>Productivity &amp; Collaboration</h3>
+        <div class="card-body">
+          <div class="inline-icon">
+            <div class="logo" title="Teams">T</div>
+            <div>
+              <p style="margin:0">Unified platform for collaboration (chat, meetings, file sharing).</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Bottom column (Data Analysis & Visualization) -->
+    <section class="card-column bottom" aria-label="Data Analysis and Visualization column">
+      <article class="card" id="data-viz" tabindex="0">
+        <h3>Data Analysis &amp; Visualization</h3>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="logo" title="Excel">X</div>
+            <div>
+              <p style="margin:0">Transforms and cleans data from multiple sources. Creates interactive dashboards and visual reports.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Lower-left column (Automation & Workflow) -->
+    <section class="card-column bottom-left" aria-label="Automation and Workflow column">
+      <article class="card" id="automation" tabindex="0">
+        <h3>Automation &amp; Workflow</h3>
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="logo" title="SharePoint">SP</div>
+            <div>
+              <p style="margin:0">Platform for secure document management, building intranet sites and organizing content.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+<script>
+/*
+  SVG connector script
+  - computes card center positions relative to SVG viewport
+  - draws quadratic bezier curves from toolbox center to each card center
+  - tune the lift variable to move the curve control point (affects shape)
+*/
+
+(function () {
+  const svg = document.getElementById('connectors');
+  const paths = {
+    left: document.getElementById('p-left'),
+    right: document.getElementById('p-right'),
+    bottom: document.getElementById('p-bottom'),
+    top: document.getElementById('p-top'),
+  };
+
+  function getElemCenter(elem) {
+    const rect = elem.getBoundingClientRect();
+    const svgRect = svg.getBoundingClientRect();
+    return {
+      x: rect.left + rect.width / 2 - svgRect.left,
+      y: rect.top + rect.height / 2 - svgRect.top
+    };
+  }
+
+  // returns a path string for quadratic bezier from 'from' to 'to'.
+  // shiftX nudges control point horizontally; lift lifts it vertically (negative lifts up).
+  function makePath(from, to, shiftX = 0, lift = -80) {
+    const midX = (from.x + to.x) / 2;
+    const midY = (from.y + to.y) / 2;
+    const cx = midX + shiftX;
+    const cy = midY + lift;
+    return `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+  }
+
+  function updatePaths() {
+    // must recalc size of svg since preserveAspectRatio=none makes coords relative to element size
+    const toolbox = document.getElementById('toolbox');
+    const t = getElemCenter(toolbox);
+
+    const leftCard = document.getElementById('ai-tools');
+    const rightCard = document.getElementById('prod-collab');
+    const bottomCard = document.getElementById('data-viz');
+    const botLeftCard = document.getElementById('automation');
+
+    const l = getElemCenter(leftCard);
+    const r = getElemCenter(rightCard);
+    const b = getElemCenter(bottomCard);
+    const bl = getElemCenter(botLeftCard);
+
+    // tune these numbers if curves intersect or need matching to source image
+    paths.left.setAttribute('d', makePath(t, l, -140, -60));
+    paths.right.setAttribute('d', makePath(t, r, 140, -60));
+    // bottom is roughly straight-ish downward
+    paths.bottom.setAttribute('d', makePath(t, b, 0, 80));
+    // top/left-below card
+    paths.top.setAttribute('d', makePath(t, bl, -40, 30));
+  }
+
+  // call on load and resize and when fonts/images settle
+  window.addEventListener('resize', updatePaths);
+  window.addEventListener('load', updatePaths);
+
+  // in case layout changes after render (fonts, slow images), animate a few refreshes
+  setTimeout(updatePaths, 200);
+  setTimeout(updatePaths, 800);
+
+  // basic interactivity - click the toolbox to toggle highlights
+  const toolboxBtn = document.querySelector('.toolbox-icon');
+  toolboxBtn.addEventListener('click', () => {
+    document.querySelectorAll('.card').forEach(c => c.classList.toggle('highlight'));
+    const pressed = toolboxBtn.getAttribute('aria-pressed') === 'true';
+    toolboxBtn.setAttribute('aria-pressed', String(!pressed));
+  });
+
+  // hover effect to briefly raise card (also helps visual debugging)
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mouseenter', () => card.classList.add('hovered'));
+    card.addEventListener('mouseleave', () => card.classList.remove('hovered'));
+  });
+
+})();
+</script>
+</body>
+</html>
